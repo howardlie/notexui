@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Shared Notes</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12 col-sm-6 col-md-4 col-lg-3>
+        <ion-card>
+          <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet()">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+          </ion-button></div>
+          
+
+          <ion-card-header>
+            <ion-card-subtitle><small>3 days ago</small></ion-card-subtitle>
+            <ion-card-title>Notes Title</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>
+              Keep close to Nature's heart... and break clear away, once in
+              awhile, and climb a mountain or spend a week in the woods. Wash
+              your spirit clean.
+            </p>
+          </ion-card-content>
+
+          <ion-row>
+            <ion-col>
+              <ion-button (click)="openNotes()">
+                <ion-icon name="create"></ion-icon>
+                <div>Edit</div>
+              </ion-button>
+            </ion-col>
+            <ion-col
+              style="display: flex; justify-content: flex-end; align-items: flex-end;"
+            >
+              <ion-icon name="share-social"></ion-icon
+              ><ion-icon
+                name="notifications"
+                style="padding-left: 0.3em"
+              ></ion-icon
+              ><ion-icon name="refresh" style="padding-left: 0.3em"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

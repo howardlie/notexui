@@ -1,0 +1,15 @@
+<div class="ion-padding">  <span *ngIf="isOnline">Online Mode</span
+  ><span *ngIf="!isOnline">Offline Mode</span>
+  <ion-button
+    size="small"
+    class="ion-float-end"
+    [disabled]="!isOnline"
+    (click)="loading = true"
+    *ngIf="!loading"
+  >
+    <ion-icon name="refresh"></ion-icon>
+  </ion-button>
+  <ion-spinner size="small" class="ion-float-end" *ngIf="loading"></ion-spinner><br /><small
+    >Last sync : 00/00/0000 00:00</small
+  >
+</div>
