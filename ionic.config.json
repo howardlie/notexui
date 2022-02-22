@@ -1,0 +1,7 @@
+{
+  "name": "skripsi2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
