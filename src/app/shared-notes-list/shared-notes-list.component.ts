@@ -14,6 +14,10 @@ export class SharedNotesListComponent implements OnInit {
 
   ngOnInit() {}
 
+  openNotes() {
+    
+  }
+
   async presentActionSheet() {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Notes Title',

@@ -66,4 +66,8 @@ export class MyNotesListComponent implements OnInit {
     console.log('onDidDismiss resolved with role and data', role, data);
   }
 
+  onsearch(event) {
+    
+  }
+
 }

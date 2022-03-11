@@ -5,4 +5,47 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>Test</ion-content>
+<ion-content><ckeditor
+  [config]="{
+    toolbar: [
+      'heading',
+      '|',
+      'fontfamily',
+      'fontsize',
+      '|',
+      'alignment',
+      '|',
+      'fontColor',
+      'fontBackgroundColor',
+      '|',
+      'bold',
+      'italic',
+      'strikethrough',
+      'underline',
+      'subscript',
+      'superscript',
+      '|',
+      'link',
+      '|',
+      'outdent',
+      'indent',
+      '|',
+      'bulletedList',
+      'numberedList',
+      'todoList',
+      '|',
+      'code',
+      'codeBlock',
+      '|',
+      'insertTable',
+      '|',
+      'uploadImage',
+      'blockQuote',
+      '|',
+      'undo',
+      'redo'
+    ]
+  }"
+  [editor]="editor"
+  data="<p>Hello world!</p>"
+></ckeditor></ion-content>

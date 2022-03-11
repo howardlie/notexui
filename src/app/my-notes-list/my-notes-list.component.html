@@ -3,10 +3,13 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    
+
     <ion-title>My Notes</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-searchbar animated [autocomplete​]="off" (onInput)="onSearch($event)"></ion-searchbar>
   <ion-grid>
     <ion-row>
       <ion-col col-12 col-sm-6 col-md-4 col-lg-3>

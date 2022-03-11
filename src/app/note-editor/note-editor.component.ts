@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+//import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
+import * as Editor from '../ckeditor5/build/ckeditor';
+//import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-note-editor',
@@ -8,9 +11,12 @@ import { Router } from '@angular/router';
 })
 export class NoteEditorComponent implements OnInit {
 
+  public editor = Editor;
   constructor(private router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
   goBack() {
     //if private notes
