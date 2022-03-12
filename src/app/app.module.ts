@@ -32,7 +32,7 @@ import { NoteEditorComponent } from './note-editor/note-editor.component';
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, NoteService, {
     provide: 'SocialAuthServiceConfig',
     useValue: {
-      autoLogin: true, //keeps the user signed in
+      autoLogin: false, //keeps the user signed in
       providers: [
         {
           id: GoogleLoginProvider.PROVIDER_ID,
