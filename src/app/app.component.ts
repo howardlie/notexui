@@ -18,14 +18,8 @@ export class AppComponent implements OnInit {
   constructor(public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
-    this.http
-      .get<any>('http://localhost:8000/api/ping')
-      .pipe(retry(1)).subscribe(resp => {
-        console.log(resp);
-      });
     this.socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
-      console.log(this.socialUser);
       this.authService.loginUser(this.socialUser);
       //this.socialAuthService.signOut(); takut api authtoken jdi invalid
     });
@@ -42,7 +36,6 @@ export class AppComponent implements OnInit {
   }
 
   async presentAlertConfirmLogout() {
-    console.log("clicked logout");
     const alert = await this.alertController.create({
       header: 'Confirm!',
       message: 'Are you sure you want to Logout?',
@@ -65,5 +58,6 @@ export class AppComponent implements OnInit {
 
   logOut(): void {
     this.authService.logoutUser();
+    this.socialAuthService.signOut();
   }
 }

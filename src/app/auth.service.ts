@@ -2,7 +2,6 @@ import { SocialUser } from 'angularx-social-login';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, retry } from 'rxjs/operators';
 import { User } from './user';
 
 @Injectable({
@@ -24,13 +23,10 @@ export class AuthService {
     }
 
     loginUser(payload: SocialUser) {
-
-
-        return this.http.post<any>('http://localhost:8000/api/authenticate', {payload })
-            .pipe(retry(1)).subscribe(response=> {
+        return this.http.post<any>(this.baseUrl + '/api/authenticate', {payload })
+            .subscribe(response=> {
                 localStorage.setItem('loggedInUser', JSON.stringify(response));
                 this.loggedUserSubject.next(response);
-                console.log(response);
                 return response;
             });
     }
