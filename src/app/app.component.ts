@@ -15,6 +15,7 @@ import { AlertController } from '@ionic/angular';
 export class AppComponent implements OnInit {
   socialUser!: SocialUser;
   isLoggedin?: boolean;
+  isOnline: boolean;
   constructor(public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
@@ -24,8 +25,9 @@ export class AppComponent implements OnInit {
       //this.socialAuthService.signOut(); takut api authtoken jdi invalid
     });
 
-
-
+    this.authService.onlineStatus.subscribe(val => {
+      this.isOnline = val;
+    });
   }
 
   async presentDevicesModal() {

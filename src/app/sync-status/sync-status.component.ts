@@ -1,3 +1,5 @@
+import { NoteService } from './../note.service';
+import { AuthService } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SyncStatusComponent implements OnInit {
   public loading: boolean = false;
-  public isOnline: boolean = true; // hook to ping event
-  constructor() { }
+  isOnline: boolean; // hook to ping event
+  constructor(private authService: AuthService, private noteService: NoteService) {
 
-  ngOnInit() {}
+  }
+
+  ngOnInit() {
+    this.authService.onlineStatus.subscribe(val => {
+      this.isOnline = val;
+    });
+  }
 
 }

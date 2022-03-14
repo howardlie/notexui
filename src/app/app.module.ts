@@ -41,7 +41,7 @@ import { NoteEditorComponent } from './note-editor/note-editor.component';
       ]
     }
   },
-    AuthGuardService],
+    AuthGuardService, AuthService],
   bootstrap: [AppComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent],
   exports: [
   ],

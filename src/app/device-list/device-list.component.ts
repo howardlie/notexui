@@ -1,3 +1,4 @@
+import { DeviceService } from './../device.service';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
@@ -8,10 +9,19 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./device-list.component.scss'],
 })
 export class DeviceListComponent implements OnInit {
-  constructor(public modalController: ModalController, public alertController: AlertController) {
+  constructor(public modalController: ModalController, public alertController: AlertController, private deviceService: DeviceService) {
   }
 
-  ngOnInit() {}
+  devices = null;
+
+  ngOnInit() {
+    this.deviceService.getDeviceList().subscribe(response => {
+      if (response.status == "OK") {
+        this.devices = response.devices;
+      }
+
+    });
+  }
 
   dismiss() {
     // using the injected ModalController this page
@@ -24,7 +34,7 @@ export class DeviceListComponent implements OnInit {
   async presentAlertConfirmRevoke() {
     const alert = await this.alertController.create({
       header: 'Confirm!',
-      message: 'Are you sure you want to revoke all devices access?',
+      message: 'Are you sure you want to revoke all devices access except current devices?',
       buttons: [
         {
           text: 'Cancel',
@@ -33,7 +43,11 @@ export class DeviceListComponent implements OnInit {
         }, {
           text: 'Yes',
           handler: () => {
-            console.log('Confirm Okay');
+            this.deviceService.revokeAll().subscribe(response => {
+              if (response.status == 'OK') {
+                this.dismiss();
+              }
+            })
           }
         }
       ]
