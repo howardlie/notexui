@@ -1,6 +1,6 @@
 import { NoteService } from './../note.service';
-import { AuthService } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
+import { DeviceService } from '../device.service';
 
 @Component({
   selector: 'app-sync-status',
@@ -10,12 +10,12 @@ import { Component, OnInit } from '@angular/core';
 export class SyncStatusComponent implements OnInit {
   public loading: boolean = false;
   isOnline: boolean; // hook to ping event
-  constructor(private authService: AuthService, private noteService: NoteService) {
+  constructor(private deviceService: DeviceService, private noteService: NoteService) {
 
   }
 
   ngOnInit() {
-    this.authService.onlineStatus.subscribe(val => {
+    this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
   }

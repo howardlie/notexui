@@ -1,6 +1,7 @@
+import { DeviceService } from './device.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { retry, catchError, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Component, OnInit } from '@angular/core';
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit {
   socialUser!: SocialUser;
   isLoggedin?: boolean;
   isOnline: boolean;
-  constructor(public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient) {}
+  constructor(public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient, private deviceService: DeviceService) {}
 
   ngOnInit() {
     this.socialAuthService.authState.subscribe((user) => {
@@ -25,9 +26,11 @@ export class AppComponent implements OnInit {
       //this.socialAuthService.signOut(); takut api authtoken jdi invalid
     });
 
-    this.authService.onlineStatus.subscribe(val => {
+    
+    this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
+    this.deviceService.startRefresh();
   }
 
   async presentDevicesModal() {
