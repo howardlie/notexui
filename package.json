@@ -28,6 +28,7 @@
     "@ionic/angular": "^6.0.0",
     "angularx-social-login": "^4.0.1",
     "diff-match-patch": "^1.0.5",
+    "moment": "^2.29.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "uuid": "^8.3.2",

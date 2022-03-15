@@ -7,11 +7,11 @@
       <ion-content>
         <ion-item>
           <ion-avatar slot="start">
-            <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200" />
+            <img [src]="authService.currentUser.picture ?? 'https://www.gravatar.com/avatar/00000000000000000000000000000000'" />
           </ion-avatar>
           <ion-label>
-            <h3>Hello, Howard</h3>
-            <p>liehoward13@gmail.com</p>
+            <h3>Hello, {{ authService.currentUser.name }}</h3>
+            <p>{{ authService.currentUser.email }}</p>
           </ion-label>
         </ion-item>
         <ion-list id="inbox-list">

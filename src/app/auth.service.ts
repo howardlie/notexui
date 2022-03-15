@@ -10,9 +10,10 @@ import { take, takeUntil } from 'rxjs/operators';
 )
 export class AuthService {
     public baseUrl = "http://localhost:8000";
-    private loggedUserSubject: BehaviorSubject<User>;
-    public loggedInUser: Observable<User>;
+    private loggedUserSubject: BehaviorSubject<any>;
+    public loggedInUser: Observable<any>;
     public isLoggedin: boolean;
+    public currentUser: User;
     
 
     constructor(private http: HttpClient) {
@@ -20,8 +21,13 @@ export class AuthService {
         this.loggedUserSubject = new BehaviorSubject(getLoggedUser);
         this.loggedInUser = this.loggedUserSubject.asObservable();
         this.loggedInUser.subscribe((user) => {
-          this.isLoggedin = user != null;
+            this.isLoggedin = user != null;
+            if (user != null) {
+                this.currentUser = user.account;
+            }
+            
         });
+        this.currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
         // does not call
         
     }
@@ -29,7 +35,8 @@ export class AuthService {
     loginUser(payload: SocialUser) {
         return this.http.post<any>(this.baseUrl + '/api/authenticate', {payload })
             .subscribe(response=> {
-                localStorage.setItem('loggedInUser', JSON.stringify(response));
+                localStorage.setItem('loggedInUser', JSON.stringify(response.account));
+                localStorage.setItem('authToken', JSON.stringify(response.token));
                 this.loggedUserSubject.next(response);
                 return response;
             });
@@ -41,6 +48,7 @@ export class AuthService {
           return response;
       });
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('authToken');
 
         this.loggedUserSubject.next(null);
     }
