@@ -1,5 +1,6 @@
+import { tap } from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -22,6 +23,17 @@ export class AuthInterceptor implements HttpInterceptor {
                   }
               });
           }
+          return next.handle(request).pipe(tap(
+            event=>{
+              if(event instanceof HttpResponse) {
+                if (event.body.status != "OK") {
+                  this.authService.logoutUser();
+                }
+                console.log(event);
+              }
+
+            }
+          ));
         }
 
 
