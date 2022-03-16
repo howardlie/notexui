@@ -16,7 +16,7 @@ export class Note implements INote {
   public updated_at: Nullable<Date> = null;
   public status: Number = 1;
 
-  constructor(data?: INote) {
+  constructor(data: INote = null) {
     if (data == null) {
       this.id = uuidv4();
       this.created_at = new Date();

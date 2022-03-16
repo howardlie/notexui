@@ -34,31 +34,39 @@ export class NoteService {
 
   deleteNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
-
+    this.notes[index].status = -1;
     this.notesBS.next(this.notes);
   }
 
   archiveNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
+    this.notes[index].status = 0;
+    this.notesBS.next(this.notes);
+  }
 
+  restoreNote(id: string) {
+    let index = this.notes.findIndex(a => a.id == id);
+    this.notes[index].status = 1;
     this.notesBS.next(this.notes);
   }
 
   //need connection
   shareNote(id: string) {
-
+    let index = this.notes.findIndex(a => a.id == id);
+    this.notes[index].shared = true;
     this.notesBS.next(this.notes);
   }
 
   //does this need connection?
   setNoteReminder(id: string, datetime) {
-
+    let index = this.notes.findIndex(a => a.id == id);
     this.notesBS.next(this.notes);
   }
 
   //need connection
   unshareNote(id:string) {
-
+    let index = this.notes.findIndex(a => a.id == id);
+    this.notes[index].shared = false;
     this.notesBS.next(this.notes);
   }
 
@@ -70,7 +78,10 @@ export class NoteService {
 
   //need connection
   openSharedNote(id: string) {
+    let index = this.notes.findIndex(a => a.id == id);
+    if (index == null) {
 
+    }
     this.notesBS.next(this.notes);
   }
 
@@ -90,14 +101,26 @@ export class NoteService {
     note.shared = false;
     note.created_at = new Date();
     note.patches = null;
+    note.status = 1;
+    note.account_id = this.authService.currentUser.id;
+    note.version = 0;
     this.notes.unshift(note);
     this.notesBS.next(this.notes);
   }
 
-  saveNote(id:string, newNote) {
-    let index = this.notes.findIndex(a => a.id == id);
-
+  saveNote(note) {
+    let index = this.notes.findIndex(a => a.id == note.id);
+    if (index == null) {
+      this.notes.unshift(note);
+    } else {
+      //generate patch
+    }
     this.notesBS.next(this.notes);
+  }
+
+  getNote(id:string) {
+    let index = this.notes.findIndex(a => a.id == id);
+    return this.notes[index];
   }
 
 

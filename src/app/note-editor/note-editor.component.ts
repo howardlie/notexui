@@ -1,6 +1,6 @@
 import { DeviceService } from './../device.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 //import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
 import * as Editor from '../ckeditor5/build/ckeditor';
 //import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -13,19 +13,93 @@ import * as Editor from '../ckeditor5/build/ckeditor';
 export class NoteEditorComponent implements OnInit {
   public isOnline: boolean;
   public editor = Editor;
-  constructor(private router: Router, private deviceService: DeviceService) { }
+  public note = null;
+  public isChanged = false;
+  constructor(private router: Router, private deviceService: DeviceService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
+    this.note = this.noteService.getNote(this.route.snapshot.params['id']);
+  }
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: this.note.title,
+      buttons: [
+        {
+          text: 'Archive',
+          handler: () => {
+            this.noteService.archiveNote(this.note.id);
+            this.goBack();
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.noteService.deleteNote(this.note.id);
+            this.goBack();
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
+
+  }
+
+  save() {
+
+  }
+
+  async presentShareDialog() {
+    const alert = await this.alertController.create({
+      header: 'Share note',
+      message: 'Message <strong>text</strong>!!!',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          id: 'confirm-button',
+          handler: () => {
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  notificationDialog() {
+
   }
 
   goBack() {
-    //if private notes
-    this.router.navigate(['/']);
-    //if shared notes
-    //this.router.navigate(['/notes/shared']);
+
+    if (this.isChanged) {
+
+    }
+    
+    if (this.note.account_id == this.authService.currentUser.id) {
+      this.router.navigate(['/']);
+    } else {
+      this.router.navigate(['/notes/shared']);
+    }
   }
 
 }

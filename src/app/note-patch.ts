@@ -1,6 +1,6 @@
 export interface NotePatch {
     id: string;
     patch: string;
-    version: BigInt;
+    version: Number;
     datetime: Date;
 }

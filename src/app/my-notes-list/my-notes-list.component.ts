@@ -34,38 +34,38 @@ export class MyNotesListComponent implements OnInit {
         {
           text: 'Delete',
           handler: () => {
-            console.log('Destructive clicked');
+            this.noteService.deleteNote(note.id);
           },
         },
         {
           text: 'Share',
           handler: () => {
-            console.log('Destructive clicked');
+            //show dialog
           },
         },
         {
           text: 'Reminders',
           handler: () => {
-            console.log('Destructive clicked');
+            //show dialog
           },
         },
         {
           text: 'Archive',
           handler: () => {
-            console.log('Archive clicked');
+            this.noteService.archiveNote(note.id);
           },
         },
         {
           text: 'Duplicate',
           handler: () => {
-            console.log('Archive clicked');
+            this.noteService.duplicateNote(note.id);
           },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+            
           },
         },
       ],
