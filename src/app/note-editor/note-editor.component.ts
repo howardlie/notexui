@@ -1,3 +1,4 @@
+import { DeviceService } from './../device.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 //import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
@@ -10,12 +11,14 @@ import * as Editor from '../ckeditor5/build/ckeditor';
   styleUrls: ['./note-editor.component.scss'],
 })
 export class NoteEditorComponent implements OnInit {
-
+  public isOnline: boolean;
   public editor = Editor;
-  constructor(private router: Router) { }
+  constructor(private router: Router, private deviceService: DeviceService) { }
 
   ngOnInit() {
-    
+    this.deviceService.onlineStatus.subscribe(val => {
+      this.isOnline = val;
+    });
   }
 
   goBack() {

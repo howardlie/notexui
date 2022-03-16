@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
       //this.socialAuthService.signOut(); takut api authtoken jdi invalid
     });
 
-    
+
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });

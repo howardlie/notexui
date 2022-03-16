@@ -20,4 +20,9 @@ export class SyncStatusComponent implements OnInit {
     });
   }
 
+  refresh() {
+    this.loading = true;
+    this.noteService.sync();
+  }
+
 }

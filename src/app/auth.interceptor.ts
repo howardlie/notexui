@@ -29,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
                 if (event.body.status != "OK") {
                   this.authService.logoutUser();
                 }
-                console.log(event);
               }
 
             }

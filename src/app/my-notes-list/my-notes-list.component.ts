@@ -1,6 +1,7 @@
+import { NoteService } from './../note.service';
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-notes-list',
@@ -11,15 +12,24 @@ export class MyNotesListComponent implements OnInit {
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
-    private activatedRoute: ActivatedRoute
+    private router: Router,
+    public noteService: NoteService
   ) {}
   ngOnInit() {}
 
-  openNotes() {}
+  openNote(note) {
+    this.router.navigate(['notes/'+note.id]);
+    //console.log('notes/'+note.id);
+  }
 
-  async presentActionSheet() {
+  newNote() {
+    let note = this.noteService.createNote();
+    this.openNote(note);
+  }
+
+  async presentActionSheet(note) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Notes Title',
+      header: note.title,
       buttons: [
         {
           text: 'Delete',
@@ -67,7 +77,7 @@ export class MyNotesListComponent implements OnInit {
   }
 
   onsearch(event) {
-    
+
   }
 
 }

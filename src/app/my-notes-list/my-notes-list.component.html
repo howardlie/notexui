@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    
+
 
     <ion-title>My Notes</ion-title>
   </ion-toolbar>
@@ -12,16 +12,17 @@
   <ion-searchbar animated [autocomplete​]="off" (onInput)="onSearch($event)"></ion-searchbar>
   <ion-grid>
     <ion-row>
-      <ion-col col-12 col-sm-6 col-md-4 col-lg-3>
+
+      <ion-col col-12 col-sm-6 col-md-4 col-lg-3 *ngFor="let note of noteService.notes">
         <ion-card>
-          <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet()">
+          <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet(note)">
             <ion-icon name="ellipsis-vertical"></ion-icon>
           </ion-button></div>
-          
+
 
           <ion-card-header>
             <ion-card-subtitle><small>3 days ago</small></ion-card-subtitle>
-            <ion-card-title>Notes Title</ion-card-title>
+            <ion-card-title>{{ note.title }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>
@@ -33,7 +34,7 @@
 
           <ion-row>
             <ion-col>
-              <ion-button routerDirection="forward" [routerLink]="['/notes/123']">
+              <ion-button routerDirection="forward" (click)="openNote(note)">
                 <ion-icon name="create"></ion-icon>
                 <div>Edit</div>
               </ion-button>
@@ -41,12 +42,13 @@
             <ion-col
               style="display: flex; justify-content: flex-end; align-items: flex-end;"
             >
-              <ion-icon name="share-social"></ion-icon
-              ><ion-icon
+              <ion-icon *ngIf="note.shared" name="share-social"></ion-icon
+              ><ion-icon *ngIf="note.reminder_datetime != null"
                 name="notifications"
                 style="padding-left: 0.3em"
               ></ion-icon
-              ><ion-icon name="refresh" style="padding-left: 0.3em"></ion-icon>
+              ><ion-icon *ngIf="note.patches.length > 0" name="refresh" style="padding-left: 0.3em"></ion-icon>
+              <ion-icon *ngIf="note.patches.length == 0" name="check" style="padding-left: 0.3em"></ion-icon>
             </ion-col>
           </ion-row>
         </ion-card>
@@ -54,7 +56,7 @@
     </ion-row>
   </ion-grid>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
+    <ion-fab-button (click)="newNote()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

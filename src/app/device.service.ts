@@ -14,7 +14,7 @@ export class DeviceService {
 
   public devices = null;
   constructor(private http: HttpClient, private authService: AuthService) {
-    
+
   }
 
   startRefresh() {
@@ -26,7 +26,7 @@ export class DeviceService {
         this.onlineStatus.next(false);
       });
     });
-    
+
     this.onlineStatus.next(true);
   }
 
