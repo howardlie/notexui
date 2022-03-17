@@ -1,6 +1,9 @@
+import { DatetimeModalComponent } from './../datetime-modal/datetime-modal.component';
+import { AuthService } from './../auth.service';
+import { NoteService } from './../note.service';
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-shared-notes-list',
@@ -10,43 +13,62 @@ import { ActivatedRoute } from '@angular/router';
 export class SharedNotesListComponent implements OnInit {
 
   constructor(public actionSheetCtrl: ActionSheetController,
-    private activatedRoute: ActivatedRoute) { }
+    private router: Router,
+    public noteService: NoteService,
+    private alertController: AlertController,
+    public modalController: ModalController,
+    public authService: AuthService) { }
 
   ngOnInit() {}
 
-  openNotes() {
-    
+  openNote(note) {
+    this.router.navigate(['notes/'+note.id]);
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(note) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Notes Title',
+      header: note.title,
       buttons: [
         {
-          text: 'Unshare',
-          handler: () => {},
+          text: 'Unlink',
+          handler: () => {
+            this.noteService.permanentlyDelete(note.id);
+          },
         },
         {
           text: 'Reminders',
-          handler: () => {},
+          handler: () => {
+            this.presentDatetimeModal(note);
+          },
         },
         {
           text: 'Duplicate',
-          handler: () => {},
+          handler: () => {
+            this.noteService.duplicateNote(note.id);
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+
           },
         },
       ],
     });
     await actionSheet.present();
 
-    const { role, data } = await actionSheet.onDidDismiss();
-    console.log('onDidDismiss resolved with role and data', role, data);
+  }
+
+  async presentDatetimeModal(note) {
+    const modal = await this.modalController.create({
+      component: DatetimeModalComponent,
+      cssClass: 'max-widths',
+      componentProps: {
+        'note': note,
+      }
+    });
+    return await modal.present();
   }
 
 }

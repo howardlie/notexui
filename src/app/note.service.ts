@@ -27,8 +27,8 @@ export class NoteService {
   createNote() {
     let note = new Note();
     note.account_id = this.authService.currentUser.id;
-    //this.notes.unshift(note); no need to shift until save is pressed
-
+    this.notes.unshift(note);
+    this.notesBS.next(this.notes);
     return note;
   }
 
@@ -52,14 +52,19 @@ export class NoteService {
 
   //need connection
   shareNote(id: string) {
+
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].shared = true;
+    //upload to server
     this.notesBS.next(this.notes);
   }
 
   //does this need connection?
-  setNoteReminder(id: string, datetime) {
+  setNoteReminder(id: string, datetime: any) {
     let index = this.notes.findIndex(a => a.id == id);
+    this.notes[index].reminder_datetime = datetime;
+    // does this need to report to server?
+
     this.notesBS.next(this.notes);
   }
 
@@ -67,6 +72,7 @@ export class NoteService {
   unshareNote(id:string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].shared = false;
+    //upload to server
     this.notesBS.next(this.notes);
   }
 
@@ -93,10 +99,16 @@ export class NoteService {
     }
   }
 
+  permanentlyDelete(id:string) {
+    let index = this.notes.findIndex(a => a.id == id);
+    this.notes.splice(index,1);
+
+  }
+
 
   duplicateNote(id:string) {
     let index = this.notes.findIndex(a => a.id == id);
-    let note = this.notes[index];
+    let note = {...this.notes[index]};
     note.id = uuidv4();
     note.shared = false;
     note.created_at = new Date();
@@ -105,6 +117,7 @@ export class NoteService {
     note.account_id = this.authService.currentUser.id;
     note.version = 0;
     this.notes.unshift(note);
+    console.log(this.notes);
     this.notesBS.next(this.notes);
   }
 
@@ -121,6 +134,14 @@ export class NoteService {
   getNote(id:string) {
     let index = this.notes.findIndex(a => a.id == id);
     return this.notes[index];
+  }
+
+  getNoteLink(id: string) {
+    let index = this.notes.findIndex(a => a.id == id);
+    if (this.notes[index].shared) {
+      return window.location.origin + '/notes/' + id;
+    }
+    return null;
   }
 
 

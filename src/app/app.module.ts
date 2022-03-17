@@ -1,3 +1,6 @@
+import { DeletedNotesListComponent } from './deleted-notes-list/deleted-notes-list.component';
+import { ArchivedNotesListComponent } from './archived-notes-list/archived-notes-list.component';
+import { DatetimeModalComponent } from './datetime-modal/datetime-modal.component';
 import { AuthGuardService } from './auth-guard.service';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth.interceptor';
@@ -26,7 +29,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { NoteEditorComponent } from './note-editor/note-editor.component';
 
 @NgModule({
-  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent],
+  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent],
   entryComponents: [SyncStatusComponent, NoteEditorComponent, DeviceListComponent, LoginComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CKEditorModule, HttpClientModule, SocialLoginModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, NoteService, {
@@ -42,7 +45,7 @@ import { NoteEditorComponent } from './note-editor/note-editor.component';
     }
   },
     AuthGuardService, AuthService],
-  bootstrap: [AppComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent],
+  bootstrap: [AppComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DatetimeModalComponent, DeletedNotesListComponent, ArchivedNotesListComponent],
   exports: [
   ],
 })

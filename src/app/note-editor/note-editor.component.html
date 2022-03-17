@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="shareDialog()" [disabled]="!isOnline"><ion-icon name="share-social"></ion-icon></ion-button>
-      <ion-button (click)="notificationDialog()" [disabled]="!isOnline"><ion-icon name="notifications"></ion-icon></ion-button>
+      <ion-button id="open-modal" (click)="notificationDialog()" [disabled]="!isOnline"><ion-icon name="notifications"></ion-icon></ion-button>
       <ion-button (click)="presentActionSheet()"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
       <ion-button [disabled]="isChanged" (click)="save()"><ion-icon name="save"></ion-icon></ion-button>
     </ion-buttons>

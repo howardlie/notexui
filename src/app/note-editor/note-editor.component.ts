@@ -1,8 +1,11 @@
+import { AuthService } from './../auth.service';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { DeviceService } from './../device.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
 import * as Editor from '../ckeditor5/build/ckeditor';
+import { NoteService } from '../note.service';
 //import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
@@ -15,13 +18,14 @@ export class NoteEditorComponent implements OnInit {
   public editor = Editor;
   public note = null;
   public isChanged = false;
-  constructor(private router: Router, private deviceService: DeviceService, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private authService: AuthService) { }
 
   ngOnInit() {
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
     this.note = this.noteService.getNote(this.route.snapshot.params['id']);
+    console.log(this.note);
   }
 
   async presentActionSheet() {
@@ -46,7 +50,7 @@ export class NoteEditorComponent implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            
+
           },
         },
       ],
@@ -94,7 +98,7 @@ export class NoteEditorComponent implements OnInit {
     if (this.isChanged) {
 
     }
-    
+
     if (this.note.account_id == this.authService.currentUser.id) {
       this.router.navigate(['/']);
     } else {
