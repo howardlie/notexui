@@ -7,7 +7,7 @@ export interface INote {
     account_id: string;
     reminder_datetime?: Nullable<Date>;
     shared: boolean;
-    version: Number;
+    version: number;
     patches: Nullable<Array<NotePatch>>;
     created_at: Date;
     updated_at: Nullable<Date>;

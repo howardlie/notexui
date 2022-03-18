@@ -19,15 +19,15 @@ export class ArchivedNotesListComponent implements OnInit {
       header: note.title,
       buttons: [
         {
-          text: 'Delete',
-          handler: () => {
-            this.noteService.deleteNote(note.id);
-          },
-        },
-        {
           text: 'Restore',
           handler: () => {
             this.noteService.restoreNote(note.id);
+          },
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.noteService.deleteNote(note.id);
           },
         },
         {

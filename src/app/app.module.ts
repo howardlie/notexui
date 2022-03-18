@@ -27,9 +27,10 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NoteEditorComponent } from './note-editor/note-editor.component';
+import { SafeHtmlPipe } from './safe-html.pipe';
 
 @NgModule({
-  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent],
+  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent, SafeHtmlPipe],
   entryComponents: [SyncStatusComponent, NoteEditorComponent, DeviceListComponent, LoginComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CKEditorModule, HttpClientModule, SocialLoginModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, NoteService, {

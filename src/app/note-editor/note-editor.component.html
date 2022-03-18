@@ -4,14 +4,31 @@
       <ion-button (click)="goBack()"><ion-icon slot="start" name="arrow-back-outline"></ion-icon></ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="shareDialog()" [disabled]="!isOnline"><ion-icon name="share-social"></ion-icon></ion-button>
-      <ion-button id="open-modal" (click)="notificationDialog()" [disabled]="!isOnline"><ion-icon name="notifications"></ion-icon></ion-button>
-      <ion-button (click)="presentActionSheet()"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
-      <ion-button [disabled]="isChanged" (click)="save()"><ion-icon name="save"></ion-icon></ion-button>
+      <ion-button (click)="presentShareDialog(note)" [disabled]="!isOnline"><ion-icon name="share-social"></ion-icon></ion-button>
+      <ion-button id="open-modal" (click)="presentDatetimeModal(note)" [disabled]="!isOnline"><ion-icon name="notifications"></ion-icon></ion-button>
+      <ion-button (click)="presentActionSheet(note)"><ion-icon name="ellipsis-vertical"></ion-icon></ion-button>
+      <ion-button [disabled]="!isChanged" (click)="save()"><ion-icon name="save"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content><ckeditor
+
+<ion-content #mainContainer>
+  <style>
+    :host ::ng-deep .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+      border-color: transparent !important;
+    }
+    :host ::ng-deep .ck.ck-editor__main {
+      padding-top: 2em;
+    }
+    :host ::ng-deep .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+      border: none !important;
+    }
+    :host ::ng-deep .ck.ck-editor__top {
+      position: fixed;
+      width: 100%;
+    }
+
+    </style><ckeditor #editor
   [config]="{
     toolbar: [
       'heading',
@@ -52,6 +69,8 @@
       'redo'
     ]
   }"
-  [editor]="editor"
-  data="<p>Hello world!</p>"
+  (change)="onChange($event)"
+  [editor]="Editor"
+
 ></ckeditor></ion-content>
+

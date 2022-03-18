@@ -10,7 +10,7 @@
   <ion-grid>
     <ion-row  >
       <ng-container *ngFor="let note of noteService.notes">
-      <ion-col size="12" size-sm="6" size-md="4" size-xl="3" *ngIf="(note.status == 1) && (note.account_id == authService.currentUser.id)">
+      <ion-col size="12" size-sm="6" size-md="4" size-xl="3" *ngIf="(note.status == 1) && (note.account_id != authService.currentUser.id)">
         <ion-card>
           <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet(note)">
             <ion-icon name="ellipsis-vertical"></ion-icon>

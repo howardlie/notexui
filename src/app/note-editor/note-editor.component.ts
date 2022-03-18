@@ -1,11 +1,13 @@
+import { DatetimeModalComponent } from './../datetime-modal/datetime-modal.component';
 import { AuthService } from './../auth.service';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { DeviceService } from './../device.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
 import * as Editor from '../ckeditor5/build/ckeditor';
 import { NoteService } from '../note.service';
+import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 //import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
@@ -14,21 +16,22 @@ import { NoteService } from '../note.service';
   styleUrls: ['./note-editor.component.scss'],
 })
 export class NoteEditorComponent implements OnInit {
+  @ViewChild( 'editor' ) editorComponent: CKEditorComponent;
   public isOnline: boolean;
-  public editor = Editor;
+  public Editor = Editor;
   public note = null;
   public isChanged = false;
-  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private authService: AuthService) { }
+  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private authService: AuthService, private modalController: ModalController) { }
 
   ngOnInit() {
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
     this.note = this.noteService.getNote(this.route.snapshot.params['id']);
-    console.log(this.note);
+    //this.editorHeight = this.elementView.nativeElement.offsetHeight
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(note) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: this.note.title,
       buttons: [
@@ -36,14 +39,14 @@ export class NoteEditorComponent implements OnInit {
           text: 'Archive',
           handler: () => {
             this.noteService.archiveNote(this.note.id);
-            this.goBack();
+            this.exit();
           },
         },
         {
           text: 'Delete',
           handler: () => {
             this.noteService.deleteNote(this.note.id);
-            this.goBack();
+            this.exit();
           },
         },
         {
@@ -60,27 +63,34 @@ export class NoteEditorComponent implements OnInit {
   }
 
   save() {
+    this.noteService.saveNote(this.note, this.editorComponent.editorInstance.getData());
+    this.isChanged = false;
 
   }
 
-  async presentShareDialog() {
+  onChange(event) {
+    this.isChanged = true;
+  }
+
+  async presentAlertConfirmBack() {
     const alert = await this.alertController.create({
-      header: 'Share note',
-      message: 'Message <strong>text</strong>!!!',
+      header: 'Confirm!',
+      message: 'Are you sure you want to go back? There are changes that needs to be saved',
       buttons: [
         {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'secondary',
-          id: 'cancel-button',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
+        }, {
+          text: 'Save',
+          handler: () => {
+            this.save();
+            this.exit();
           }
         }, {
-          text: 'Okay',
-          id: 'confirm-button',
+          text: 'Yes',
           handler: () => {
-            console.log('Confirm Okay');
+            this.exit();
           }
         }
       ]
@@ -89,21 +99,91 @@ export class NoteEditorComponent implements OnInit {
     await alert.present();
   }
 
-  notificationDialog() {
-
-  }
-
-  goBack() {
-
-    if (this.isChanged) {
-
-    }
-
+  exit() {
     if (this.note.account_id == this.authService.currentUser.id) {
       this.router.navigate(['/']);
     } else {
       this.router.navigate(['/notes/shared']);
     }
+  }
+
+  goBack() {
+
+    if (this.isChanged) {
+      this.presentAlertConfirmBack();
+    } else {
+      this.exit();
+    }
+
+
+  }
+
+  async presentDatetimeModal(note) {
+    const modal = await this.modalController.create({
+      component: DatetimeModalComponent,
+      cssClass: 'max-widths',
+      componentProps: {
+        'note': note,
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentShareDialog(note) {
+    let buttons = [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+
+        }
+      },{
+        text: 'Copy Link',
+        handler: () => {
+          navigator.clipboard.writeText(this.noteService.getNoteLink(note.id));
+          const toast = document.createElement('ion-toast');
+          toast.message = 'Link copied!';
+          toast.duration = 2000;
+
+          document.body.appendChild(toast);
+          return toast.present();
+        }
+      }, {
+        text: (!note.shared) ? "Share" : "Unshare",
+        handler: () => {
+          if (note.shared) {
+            this.noteService.unshareNote(note.id);
+
+          } else {
+            this.noteService.shareNote(note.id);
+            navigator.clipboard.writeText(this.noteService.getNoteLink(note.id));
+
+          }
+          const toast = document.createElement('ion-toast');
+          toast.message = (note.shared) ? "Link Copied!" : "Unshared";
+          toast.duration = 2000;
+
+          document.body.appendChild(toast);
+          return toast.present();
+
+        }
+      }
+    ];
+
+    if (!note.shared) {
+      buttons.splice(1,1);
+    }
+
+    let alert = await this.alertController.create({
+      header: 'Share note',
+      message: 'This note is currently <strong>' + ((note.shared) ? "Shared" : "Not Shared") + '</strong>',
+      buttons: buttons
+    });
+
+
+
+    await alert.present();
   }
 
 }

@@ -1,6 +1,6 @@
-export interface NotePatch {
+export interface INotePatch {
     id: string;
     patch: string;
-    version: Number;
+    version: number;
     datetime: Date;
 }

@@ -26,7 +26,7 @@
           </ion-card-header>
           <ion-card-content>
             <p>
-              {{ (note.text.length>40)? (note.text | slice:0:40)+'..':(note.text) }}
+              {{ ((note.text.length>40)? (note.text | slice:0:40)+'..':(note.text)) | safeHtml }}
             </p>
           </ion-card-content>
 

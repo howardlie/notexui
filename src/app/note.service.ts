@@ -1,3 +1,4 @@
+import { NotePatch } from './note-patch.class';
 import { AuthService } from './auth.service';
 import { Note } from './note.class';
 import { INote } from './note';
@@ -76,9 +77,32 @@ export class NoteService {
     this.notesBS.next(this.notes);
   }
 
+  saveNote(note, newData:string) {
+    let index = this.notes.findIndex(a => a.id == note.id);
+    let notepatch = new NotePatch(null, note.id);
+    let version = this.notes[index].version + 1
+    notepatch.version = version;
+    notepatch.patch = this.dmp.patch_toText(this.dmp.patch_make(this.notes[index].text, newData));
+
+    //get title
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(newData, 'text/html');
+    const title = doc.getElementsByTagName('h1')[0];
+
+    this.notes[index].title = title.innerText;
+    this.notes[index].version = version;
+    this.notes[index].text = newData;
+    if (this.notes[index].patches == null) {
+      this.notes[index].patches = new Array();
+    }
+    this.notes[index].patches.push(notepatch);
+    this.notes[index].updated_at = new Date();
+    this.notesBS.next(this.notes);
+  }
+
   //need connection
   sync() {
-
+    //convert to hash
     this.notesBS.next(this.notes);
   }
 
@@ -118,16 +142,6 @@ export class NoteService {
     note.version = 0;
     this.notes.unshift(note);
     console.log(this.notes);
-    this.notesBS.next(this.notes);
-  }
-
-  saveNote(note) {
-    let index = this.notes.findIndex(a => a.id == note.id);
-    if (index == null) {
-      this.notes.unshift(note);
-    } else {
-      //generate patch
-    }
     this.notesBS.next(this.notes);
   }
 

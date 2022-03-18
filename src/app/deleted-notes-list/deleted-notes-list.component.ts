@@ -1,3 +1,4 @@
+import { NoteService } from './../note.service';
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 
@@ -8,39 +9,45 @@ import { ActionSheetController } from '@ionic/angular';
 })
 export class DeletedNotesListComponent implements OnInit {
 
-  constructor(public actionSheetCtrl: ActionSheetController) { }
+  constructor(public actionSheetCtrl: ActionSheetController,
+    public noteService: NoteService) { }
 
   ngOnInit() {}
 
-  async presentActionSheet() {
+  async presentActionSheet(note) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Notes Title',
+      header: note.title,
       buttons: [
-        {
-          text: 'Delete Permanently',
-          handler: () => {
-            console.log('Destructive clicked');
-          },
-        },
+
         {
           text: 'Restore',
           handler: () => {
-            console.log('Archive clicked');
+            this.noteService.restoreNote(note.id);
+          },
+        },
+        {
+          text: 'Archive',
+          handler: () => {
+            this.noteService.archiveNote(note.id);
+          },
+        },
+        {
+          text: 'Delete Permanently',
+          handler: () => {
+            this.noteService.permanentlyDelete(note.id);
           },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
+
           },
         },
       ],
     });
     await actionSheet.present();
 
-    const { role, data } = await actionSheet.onDidDismiss();
-    console.log('onDidDismiss resolved with role and data', role, data);
   }
 
 }

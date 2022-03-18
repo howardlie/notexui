@@ -9,26 +9,27 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col col-12 col-sm-6 col-md-4 col-lg-3>
+      <ng-container *ngFor="let note of noteService.notes">
+      <ion-col size="12" size-sm="6" size-md="4" size-xl="3" *ngIf="note.status == -1">
         <ion-card>
-          <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet()">
+          <div class="ion-text-right"><ion-button size="small" fill="clear"  (click)="presentActionSheet(note)">
             <ion-icon name="ellipsis-vertical"></ion-icon>
           </ion-button></div>
-          
+
 
           <ion-card-header>
-            <ion-card-subtitle><small>3 days ago</small></ion-card-subtitle>
-            <ion-card-title>Notes Title</ion-card-title>
+            <ion-card-subtitle><small>{{ ((note.updated_at) ?? note.created_at) | date : 'short' }}</small></ion-card-subtitle>
+            <ion-card-title>{{ note.title }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>
-              Keep close to Nature's heart... and break clear away, once in
-              awhile, and climb a mountain or spend a week in the woods. Wash
-              your spirit clean.
+              {{ (note.text.length>40)? (note.text | slice:0:40)+'..':(note.text) }}
             </p>
           </ion-card-content>
+
         </ion-card>
       </ion-col>
+    </ng-container>
     </ion-row>
   </ion-grid>
 </ion-content>

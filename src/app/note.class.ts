@@ -10,7 +10,7 @@ export class Note implements INote {
   public account_id: string;
   public reminder_datetime: Nullable<Date> = null;
   public shared: boolean = false;
-  public version: Number = 0;
+  public version: number = 0;
   public patches: Nullable<Array<NotePatch>> = null;
   public created_at: Date;
   public updated_at: Nullable<Date> = null;
