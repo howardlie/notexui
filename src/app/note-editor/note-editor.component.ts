@@ -27,8 +27,40 @@ export class NoteEditorComponent implements OnInit {
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
-    this.note = this.noteService.getNote(this.route.snapshot.params['id']);
+    let id = this.route.snapshot.params['id'];
+    this.note = this.noteService.getNote(id);
+    if (this.note == null) {
+      let httpCall = this.noteService.openSharedNote(id);
+      if (httpCall != null) {
+        httpCall.subscribe(response => {
+          if (response.status == "OK") {
+            this.note = this.noteService.getNote(id);
+          }
+          if (this.note == null) {
+            this.presentAlertNotFound();
+            this.router.navigate(['/']);
+          }
+        });
+      }
+
+    }
     //this.editorHeight = this.elementView.nativeElement.offsetHeight
+  }
+
+  async presentAlertNotFound() {
+    const alert = await this.alertController.create({
+      header: 'Confirm!',
+      message: 'No notes found with such ID.',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          cssClass: 'secondary',
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   async presentActionSheet(note) {

@@ -22,7 +22,10 @@ export class SyncStatusComponent implements OnInit {
 
   refresh() {
     this.loading = true;
-    this.noteService.sync();
+    let call = this.noteService.sync();
+    call.subscribe(response => {
+      this.loading = false;
+    });
   }
 
 }

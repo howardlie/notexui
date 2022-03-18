@@ -15,6 +15,7 @@ export class Note implements INote {
   public created_at: Date;
   public updated_at: Nullable<Date> = null;
   public status: Number = 1;
+  public hash: string = "";
 
   constructor(data: INote = null) {
     if (data == null) {

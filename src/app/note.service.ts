@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import DiffMatchPatch from 'diff-match-patch';
+import md5 from 'md5';
 
 @Injectable({
   providedIn: 'root'
@@ -36,18 +37,21 @@ export class NoteService {
   deleteNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].status = -1;
+    this.notes[index].updated_at = new Date();
     this.notesBS.next(this.notes);
   }
 
   archiveNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].status = 0;
+    this.notes[index].updated_at = new Date();
     this.notesBS.next(this.notes);
   }
 
   restoreNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].status = 1;
+    this.notes[index].updated_at = new Date();
     this.notesBS.next(this.notes);
   }
 
@@ -56,16 +60,18 @@ export class NoteService {
 
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].shared = true;
-    //upload to server
+    this.notes[index].updated_at = new Date();
     this.notesBS.next(this.notes);
+    this.sync();
   }
 
   //does this need connection?
   setNoteReminder(id: string, datetime: any) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].reminder_datetime = datetime;
+    this.notes[index].updated_at = new Date();
     // does this need to report to server?
-
+    
     this.notesBS.next(this.notes);
   }
 
@@ -73,8 +79,9 @@ export class NoteService {
   unshareNote(id:string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].shared = false;
-    //upload to server
+    this.notes[index].updated_at = new Date();
     this.notesBS.next(this.notes);
+    this.sync();
   }
 
   saveNote(note, newData:string) {
@@ -102,19 +109,58 @@ export class NoteService {
 
   //need connection
   sync() {
-    //convert to hash
-    this.notesBS.next(this.notes);
+    let payload = new Array();
+    for (let i = 0; i < this.notes.length; i++) {
+      let element = this.notes[i];
+      let note = {...element};
+      note.hash = md5(note.text);
+      note.text = "";
+      payload.push(note);
+    }
+    let httpCall = this.http.post<any>(this.authService.baseUrl + '/notes/getShared/', payload);
+    httpCall.subscribe(response => {
+      if (response.status == "OK") {
+        for (let i = 0; i < this.notes.length; i++) {
+          let element = this.notes[i];
+          element.patches = null;
+          
+        }
+        for (let i = 0; i < response.notes.length; i++) {
+          let element = response.notes[i];
+          // apply all patch from server
+        }
+        
+      }
+      this.notesBS.next(this.notes);
+      return response;
+      
+    });
+    
+    
+    return httpCall;
   }
 
   //need connection
   openSharedNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
     if (index == null) {
-
+      let httpCall = this.http.get<any>(this.authService.baseUrl + '/notes/getShared/' + id);
+      httpCall.subscribe(response => {
+        let note = null;
+        if (response.status == "OK") {
+          note = new Note(response.note);
+          this.notes.unshift(note);
+          this.notesBS.next(this.notes);
+        }
+        return response;
+      });
+      return httpCall;
     }
-    this.notesBS.next(this.notes);
+    
+    return null;
   }
 
+  //need connection
   unlinkNote(id:string) {
     let index = this.notes.findIndex(a => a.id == id);
     if (this.notes[index].account_id != this.authService.currentUser.id) {

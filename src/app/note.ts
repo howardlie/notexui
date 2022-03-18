@@ -12,4 +12,5 @@ export interface INote {
     created_at: Date;
     updated_at: Nullable<Date>;
     status: Number;
+    hash?: string;
 }
