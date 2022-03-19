@@ -4,7 +4,7 @@
     size="small"
     class="ion-float-end"
     [disabled]="!isOnline"
-    (click)="loading = true"
+    (click)="refresh()"
     *ngIf="!loading"
   >
     <ion-icon name="refresh"></ion-icon>

@@ -117,10 +117,12 @@ export class NoteService {
       note.text = "";
       payload.push(note);
     }
-    let httpCall = this.http.post<any>(this.authService.baseUrl + '/notes/getShared/', payload);
+    let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload});
     httpCall.subscribe(response => {
       if (response.status == "OK") {
-        for (let i = 0; i < this.notes.length; i++) {
+      	console.log(response);
+      	return response;
+        /*for (let i = 0; i < this.notes.length; i++) {
           let element = this.notes[i];
           element.patches = null;
           
@@ -129,7 +131,7 @@ export class NoteService {
           let element = response.notes[i];
           // apply all patch from server
         }
-        
+        */
       }
       this.notesBS.next(this.notes);
       return response;
@@ -144,7 +146,7 @@ export class NoteService {
   openSharedNote(id: string) {
     let index = this.notes.findIndex(a => a.id == id);
     if (index == null) {
-      let httpCall = this.http.get<any>(this.authService.baseUrl + '/notes/getShared/' + id);
+      let httpCall = this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id);
       httpCall.subscribe(response => {
         let note = null;
         if (response.status == "OK") {

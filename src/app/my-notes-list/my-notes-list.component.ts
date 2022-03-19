@@ -150,4 +150,8 @@ export class MyNotesListComponent implements OnInit {
     await alert.present();
   }
 
+  onSearch(event) {
+
+  }
+
 }
