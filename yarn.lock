@@ -5735,6 +5735,11 @@
   "resolved" "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
   "version" "1.0.1"
 
+"fuzzy-search@^3.2.1":
+  "integrity" "sha512-vAcPiyomt1ioKAsAL2uxSABHJ4Ju/e4UeDM+g1OlR0vV4YhLGMNsdLNvZTpEDY4JCSt0E4hASCNM5t2ETtsbyg=="
+  "resolved" "https://registry.npmjs.org/fuzzy-search/-/fuzzy-search-3.2.1.tgz"
+  "version" "3.2.1"
+
 "gauge@^4.0.0":
   "integrity" "sha512-aSPRm2CvA9R8QyU5eXMFPd+cYkyxLsXHd2l5/FOH2V/eml//M04G6KZOmTap07O1PvEwNcl2NndyLfK8g3QrKA=="
   "resolved" "https://registry.npmjs.org/gauge/-/gauge-4.0.2.tgz"

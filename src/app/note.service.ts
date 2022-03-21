@@ -157,6 +157,7 @@ export class NoteService {
           this.notes[index].version = 0;
           this.notes[index].account_id = this.authService.currentUser.id;
           this.notes[index].id = uuidv4();
+          this.notes[index].title = 'Conflicting note '+ this.notes[index].title;
           let notepatch = new NotePatch(null, this.notes[index].id);
           let version = this.notes[index].version + 1
           notepatch.version = version;
@@ -235,7 +236,6 @@ export class NoteService {
     note.account_id = this.authService.currentUser.id;
     note.version = 0;
     this.notes.unshift(note);
-    console.log(this.notes);
     this.notesBS.next(this.notes);
   }
 

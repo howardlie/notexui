@@ -4,6 +4,7 @@ import { NoteService } from './../note.service';
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import FuzzySearch from 'fuzzy-search';
 
 @Component({
   selector: 'app-my-notes-list',
@@ -11,6 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./my-notes-list.component.scss'],
 })
 export class MyNotesListComponent implements OnInit {
+
+  fuse;
+
+  public notes;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -21,6 +26,10 @@ export class MyNotesListComponent implements OnInit {
     public authService: AuthService,
   ) {}
   ngOnInit() {
+    this.notes = this.noteService.notes;
+    this.fuse = new FuzzySearch(this.noteService.notes, ['text'], {
+      caseSensitive: false,
+    });
   }
 
   async presentDatetimeModal(note) {
@@ -92,6 +101,14 @@ export class MyNotesListComponent implements OnInit {
   }
 
   onsearch(event) {
+    let searchTerm = event.detail.value;
+    /*if (searchTerm == "") {
+      this.notes = this.noteService.notes;
+    } else {
+      this.notes = this.fuse.search(searchTerm);
+    }*/
+    this.notes = this.fuse.search(searchTerm);
+    console.log(this.notes);
 
   }
 
