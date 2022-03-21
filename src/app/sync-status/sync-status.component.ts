@@ -10,7 +10,7 @@ import { DeviceService } from '../device.service';
 export class SyncStatusComponent implements OnInit {
   public loading: boolean = false;
   isOnline: boolean; // hook to ping event
-  constructor(private deviceService: DeviceService, private noteService: NoteService) {
+  constructor(private deviceService: DeviceService, public noteService: NoteService) {
 
   }
 

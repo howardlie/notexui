@@ -10,6 +10,6 @@
     <ion-icon name="refresh"></ion-icon>
   </ion-button>
   <ion-spinner size="small" class="ion-float-end" *ngIf="loading"></ion-spinner><br /><small
-    >Last sync : 00/00/0000 00:00</small
+    >Last sync : {{ noteService.lastSync.getHours() }}:{{ noteService.lastSync.getMinutes() }} {{ noteService.lastSync.getDate() }}/{{ noteService.lastSync.getMonth() }}/{{ noteService.lastSync.getFullYear() }} </small
   >
 </div>

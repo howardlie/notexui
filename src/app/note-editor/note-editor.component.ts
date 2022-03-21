@@ -1,3 +1,4 @@
+import { Note } from './../note.class';
 import { DatetimeModalComponent } from './../datetime-modal/datetime-modal.component';
 import { AuthService } from './../auth.service';
 import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
@@ -21,9 +22,10 @@ export class NoteEditorComponent implements OnInit {
   public Editor = Editor;
   public note = null;
   public isChanged = false;
-  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, private authService: AuthService, private modalController: ModalController) { }
+  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) { }
 
   ngOnInit() {
+    this.note = new Note();
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
@@ -31,20 +33,22 @@ export class NoteEditorComponent implements OnInit {
     this.note = this.noteService.getNote(id);
     if (this.note == null) {
       let httpCall = this.noteService.openSharedNote(id);
+      console.log(httpCall);
       if (httpCall != null) {
         httpCall.subscribe(response => {
+
           if (response.status == "OK") {
+            console.log(this.noteService.getNote(id));
             this.note = this.noteService.getNote(id);
-          }
-          if (this.note == null) {
+          } else if (this.note == null) {
             this.presentAlertNotFound();
-            this.router.navigate(['/']);
+
           }
+          console.log(this.note);
         });
       }
 
     }
-    //this.editorHeight = this.elementView.nativeElement.offsetHeight
   }
 
   async presentAlertNotFound() {
@@ -56,6 +60,9 @@ export class NoteEditorComponent implements OnInit {
           text: 'OK',
           role: 'cancel',
           cssClass: 'secondary',
+          handler: () => {
+            //this.router.navigate(['/']);
+          }
         }
       ]
     });

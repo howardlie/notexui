@@ -1,3 +1,4 @@
+import { NoteService } from './note.service';
 import { SocialUser } from 'angularx-social-login';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +15,7 @@ export class AuthService {
     public loggedInUser: Observable<any>;
     public isLoggedin: boolean;
     public currentUser: User;
-    
+
 
     constructor(private http: HttpClient) {
         let getLoggedUser = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -25,18 +26,25 @@ export class AuthService {
             if (user != null) {
                 this.currentUser = user.account;
             }
-            
+
         });
         this.currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
         // does not call
-        
+
     }
 
     loginUser(payload: SocialUser) {
         return this.http.post<any>(this.baseUrl + '/api/authenticate', {payload })
             .subscribe(response=> {
-                localStorage.setItem('loggedInUser', JSON.stringify(response.account));
+                if (this.currentUser != null) {
+                  if (response.account.id != this.currentUser.id) {
+                    localStorage.removeItem('notes');
+
+                  }
+                }
+
                 localStorage.setItem('authToken', JSON.stringify(response.token));
+                localStorage.setItem('loggedInUser', JSON.stringify(response.account));
                 this.loggedUserSubject.next(response);
                 return response;
             });
@@ -47,9 +55,7 @@ export class AuthService {
       .subscribe(response=> {
           return response;
       });
-        localStorage.removeItem('loggedInUser');
         localStorage.removeItem('authToken');
-
         this.loggedUserSubject.next(null);
     }
     public get loggedInUserValue(){

@@ -1,3 +1,4 @@
+import { AuthService } from './../auth.service';
 import { DatetimeModalComponent } from './../datetime-modal/datetime-modal.component';
 import { NoteService } from './../note.service';
 import { Component, OnInit } from '@angular/core';
@@ -16,7 +17,8 @@ export class MyNotesListComponent implements OnInit {
     private router: Router,
     public noteService: NoteService,
     private alertController: AlertController,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public authService: AuthService,
   ) {}
   ngOnInit() {
   }
