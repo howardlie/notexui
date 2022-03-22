@@ -34,7 +34,8 @@ export class NoteEditorComponent implements OnInit {
     if (this.note == null) {
       let httpCall = this.noteService.openSharedNote(id);
       console.log(httpCall);
-      if (httpCall != null) {
+      let note = httpCall;
+      /*if (httpCall != null) {
         httpCall.subscribe(response => {
 
           if (response.status == "OK") {
@@ -46,7 +47,7 @@ export class NoteEditorComponent implements OnInit {
           }
           console.log(this.note);
         });
-      }
+      }*/
 
     }
   }

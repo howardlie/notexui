@@ -176,11 +176,6 @@ export class NoteService {
           this.notes.push(note);
         }
 
-
-
-
-
-
       }
       this.notesBS.next(this.notes);
       this.lastSync = new Date();
@@ -195,18 +190,17 @@ export class NoteService {
   }
 
   //need connection
-  openSharedNote(id: string) {
-      let httpCall = this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id);
-      httpCall.subscribe(response => {
-        console.log(response);
-        let note = null;
-        if (response.status == "OK") {
-          note = new Note(response.note);
-          this.notes.unshift(note);
-          this.notesBS.next(this.notes);
-        }
-      });
-      return httpCall;
+  async openSharedNote(id: string) {
+      let response = await this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id).toPromise();
+      console.log(response);
+      let note = null;
+      if (response.status == "OK") {
+        note = new Note(response.note);
+        this.notes.unshift(note);
+        this.notesBS.next(this.notes);
+      }
+
+      return note;
   }
 
   //need connection
