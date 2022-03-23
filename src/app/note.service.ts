@@ -30,6 +30,8 @@ export class NoteService {
     this.authService.loggedInUser.subscribe((user) => {
       if (user != null) {
         this.sync();
+      } else {
+        this.notes = new Array();
       }
     });
     this.noteSyncer.subscribe(() => {
@@ -154,9 +156,9 @@ export class NoteService {
 
 
         for (let i = 0; i < this.notes.length; i++) {
-          if (response.duplicate_notes.includes(this.notes[i].id) ) {
-            this.notes[i].patches.forEach((value) => {
-              value.synced = true;
+          if (!response.duplicate_notes.includes(this.notes[i].id) && this.notes[i].patches != null) {
+            this.notes[i].patches.forEach((value, index) => {
+              this.notes[i].patches[index].synced = true;
             });
           }
 
@@ -170,7 +172,7 @@ export class NoteService {
           this.notes[index].patches.push(patch);
         }
 
-        //loop note_dups (change current existing ID)
+
         for (let i = 0; i < response.duplicate_notes.length; i++) {
           let element = response.duplicate_notes[i];
           let index = this.notes.findIndex(a => a.id == element);
@@ -228,15 +230,24 @@ export class NoteService {
 
   //need connection
   async openSharedNote(id: string) {
-      let response = await this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id).toPromise();
-      console.log(response);
+      let index = this.notes.findIndex(a => a.id == id);
       let note = null;
-      if (response.status == "OK") {
-        note = new Note(response.note);
-        this.notes.unshift(note);
-        this.notesBS.next(this.notes);
-      }
+      if (index === -1) {
 
+        let response = await this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id).toPromise();
+        
+        
+        if (response.status == "OK") {
+          note = new Note(response.note);
+          this.notes.unshift(note);
+          this.notesBS.next(this.notes);
+        }
+  
+        
+      } else {
+        note = this.notes[index];
+      }
+      //console.log(note);
       return note;
   }
 

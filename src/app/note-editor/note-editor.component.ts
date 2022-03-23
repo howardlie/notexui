@@ -23,20 +23,41 @@ export class NoteEditorComponent implements OnInit {
   public note = null;
   public isChanged = false;
   constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) {
-
+    
+    let id = this.route.snapshot.params['id'];
+    this.note = this.noteService.getNote(id);
+    if (this.note != null) {
+      if (this.note.patches != null) {
+        this.note.patches.forEach((value, index) => {
+          if (!(value.datetime instanceof Date)) {
+            this.note.patches[index].datetime = new Date(Date.parse(value.datetime));
+          }
+        } );
+      }
+    } else {
+      this.note = new Note();
+      this.note.account_id = this.authService.currentUser.id;
+    }
   }
 
   ngOnInit() {
-    this.note = new Note();
-    this.deviceService.onlineStatus.subscribe(val => {
-      this.isOnline = val;
-    });
     let id = this.route.snapshot.params['id'];
-    this.note = this.noteService.getNote(id);
-    if (this.note == null) {
-      let httpCall = this.noteService.openSharedNote(id);
-      console.log(httpCall);
-      let note = httpCall;
+    if (this.note.id != id) {
+      
+      this.noteService.openSharedNote(id).then(data => {
+        //console.log(data);
+        this.note = data;
+        /*
+        if (this.note.patches != null) {
+          this.note.patches.forEach((value, index) => {
+            if (!(value.datetime instanceof Date)) {
+              this.note.patches[index].datetime = new Date(Date.parse(value.datetime));
+            }
+          } );
+        }*/
+        window.location.reload();
+      });
+      
       /*if (httpCall != null) {
         httpCall.subscribe(response => {
 
@@ -52,15 +73,15 @@ export class NoteEditorComponent implements OnInit {
       }*/
 
     }
-    if (this.note.patches != null) {
-      this.note.patches.forEach((value, index) => {
-        if (!(value.datetime instanceof Date)) {
-          this.note.patches[index].datetime = new Date(Date.parse(value.datetime));
-        }
-      } );
-    }
 
-    console.log(this.note);
+    this.deviceService.onlineStatus.subscribe(val => {
+      this.isOnline = val;
+    });
+    
+
+    
+
+    //console.log(this.note);
   }
 
   async presentAlertNotFound() {
@@ -153,6 +174,10 @@ export class NoteEditorComponent implements OnInit {
   closeModal() { this.modalController.dismiss(); }
 
   exit() {
+    if (this.note == null) {
+      console.log(this.note);
+      this.router.navigate(['/']);
+    }
     if (this.note.account_id == this.authService.currentUser.id) {
       this.router.navigate(['/']);
     } else {

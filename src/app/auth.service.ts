@@ -36,6 +36,8 @@ export class AuthService {
     loginUser(payload: SocialUser) {
         return this.http.post<any>(this.baseUrl + '/api/authenticate', {payload })
             .subscribe(response=> {
+                console.log(this.currentUser);
+                console.log(response.account);
                 if (this.currentUser != null) {
                   if (response.account.id != this.currentUser.id) {
                     localStorage.removeItem('notes');
