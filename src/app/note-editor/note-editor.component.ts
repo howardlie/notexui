@@ -22,7 +22,9 @@ export class NoteEditorComponent implements OnInit {
   public Editor = Editor;
   public note = null;
   public isChanged = false;
-  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) { }
+  constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) {
+
+  }
 
   ngOnInit() {
     this.note = new Note();
@@ -50,6 +52,15 @@ export class NoteEditorComponent implements OnInit {
       }*/
 
     }
+    if (this.note.patches != null) {
+      this.note.patches.forEach((value, index) => {
+        if (!(value.datetime instanceof Date)) {
+          this.note.patches[index].datetime = new Date(Date.parse(value.datetime));
+        }
+      } );
+    }
+
+    console.log(this.note);
   }
 
   async presentAlertNotFound() {
@@ -139,6 +150,8 @@ export class NoteEditorComponent implements OnInit {
     await alert.present();
   }
 
+  closeModal() { this.modalController.dismiss(); }
+
   exit() {
     if (this.note.account_id == this.authService.currentUser.id) {
       this.router.navigate(['/']);
@@ -159,6 +172,17 @@ export class NoteEditorComponent implements OnInit {
   }
 
   async presentDatetimeModal(note) {
+    const modal = await this.modalController.create({
+      component: DatetimeModalComponent,
+      cssClass: 'max-widths',
+      componentProps: {
+        'note': note,
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentPatchModal(note) {
     const modal = await this.modalController.create({
       component: DatetimeModalComponent,
       cssClass: 'max-widths',

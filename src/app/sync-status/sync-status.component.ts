@@ -8,7 +8,6 @@ import { DeviceService } from '../device.service';
   styleUrls: ['./sync-status.component.scss'],
 })
 export class SyncStatusComponent implements OnInit {
-  public loading: boolean = false;
   isOnline: boolean; // hook to ping event
   constructor(private deviceService: DeviceService, public noteService: NoteService) {
 
@@ -20,12 +19,5 @@ export class SyncStatusComponent implements OnInit {
     });
   }
 
-  refresh() {
-    this.loading = true;
-    let call = this.noteService.sync();
-    call.subscribe(response => {
-      this.loading = false;
-    });
-  }
 
 }

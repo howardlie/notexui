@@ -4,12 +4,12 @@
     size="small"
     class="ion-float-end"
     [disabled]="!isOnline"
-    (click)="refresh()"
-    *ngIf="!loading"
+    (click)="noteService.sync()"
+    *ngIf="!noteService.loading"
   >
     <ion-icon name="refresh"></ion-icon>
   </ion-button>
-  <ion-spinner size="small" class="ion-float-end" *ngIf="loading"></ion-spinner><br /><small
+  <ion-spinner size="small" class="ion-float-end" *ngIf="noteService.loading"></ion-spinner><br /><small
     >Last sync : {{ noteService.lastSync.getHours() }}:{{ noteService.lastSync.getMinutes() }} {{ noteService.lastSync.getDate() }}/{{ noteService.lastSync.getMonth() }}/{{ noteService.lastSync.getFullYear() }} </small
   >
 </div>

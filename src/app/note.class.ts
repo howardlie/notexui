@@ -17,10 +17,11 @@ export class Note implements INote {
   public status: Number = 1;
   public hash: string = "";
 
-  constructor(data: INote = null) {
+  constructor(data: any = null) {
     if (data == null) {
       this.id = uuidv4();
       this.created_at = new Date();
+      this.status = 1;
     } else {
       this.id = data.id;
       this.title = data.title;

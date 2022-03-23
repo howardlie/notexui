@@ -19,6 +19,7 @@ export class NoteService {
   private dmp: DiffMatchPatch = new DiffMatchPatch();
   private noteSyncer = timer(1000*60*10,1000*60*10);
   public lastSync: Date;
+  public loading: boolean = false;
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.notes = JSON.parse(localStorage.getItem('notes')) ?? new Array();
@@ -102,6 +103,8 @@ export class NoteService {
     let version = this.notes[index].version + 1
     notepatch.version = version;
     notepatch.patch = this.dmp.patch_toText(this.dmp.patch_make(this.notes[index].text, newData));
+    notepatch.editor_email = this.authService.currentUser.email;
+    notepatch.editor_name = this.authService.currentUser.name;
 
     //get title
     const parser = new DOMParser();
@@ -128,39 +131,57 @@ export class NoteService {
   //need connection
   sync() {
     let payload = new Array();
+    console.log(this.notes);
     for (let i = 0; i < this.notes.length; i++) {
-      let element = this.notes[i];
-      let note = {...element};
+      let note = {...this.notes[i]};
       note.hash = md5(note.text);
       note.text = "";
+      if (note.patches != null) {
+        note.patches = JSON.parse(JSON.stringify(note.patches));
+        note.patches.forEach((value, index) => {
+          if (value.synced) {
+            note.patches.splice(index, 1);
+          }
+        });
+      }
+
       payload.push(note);
     }
     let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload});
+    this.loading = true;
     httpCall.subscribe(response => {
       if (response.status == "OK") {
-      	console.log(response);
-        //remove local patch
+
+
         for (let i = 0; i < this.notes.length; i++) {
-          this.notes[i].patches = null;
+          if (response.duplicate_notes.includes(this.notes[i].id) ) {
+            this.notes[i].patches.forEach((value) => {
+              value.synced = true;
+            });
+          }
+
         }
 
         for (let i = 0; i < response.note_patchs.length; i++) {
-          let element = response.note_patchs[i];
-          let index = this.notes.findIndex(a => a.id == element.note_id);
-          this.notes[index] = this.patchNote(this.notes[index], element);
+          let patch = response.note_patchs[i];
+          let index = this.notes.findIndex(a => a.id == patch.note_id);
+          this.notes[index] = this.patchNote(this.notes[index], patch);
+          patch.synced = true;
+          this.notes[index].patches.push(patch);
         }
 
         //loop note_dups (change current existing ID)
         for (let i = 0; i < response.duplicate_notes.length; i++) {
           let element = response.duplicate_notes[i];
           let index = this.notes.findIndex(a => a.id == element);
-          this.notes[index].version = 0;
+          this.notes[index].version = 1;
           this.notes[index].account_id = this.authService.currentUser.id;
           this.notes[index].id = uuidv4();
           this.notes[index].title = 'Conflicting note '+ this.notes[index].title;
           let notepatch = new NotePatch(null, this.notes[index].id);
-          let version = this.notes[index].version + 1
+          let version = 1;
           notepatch.version = version;
+          this.notes[index].patches = null;
           notepatch.patch = this.dmp.patch_toText(this.dmp.patch_make('', this.notes[index].text));
           if (this.notes[index].patches == null) {
             this.notes[index].patches = new Array();
@@ -172,21 +193,37 @@ export class NoteService {
         //loop notes (create only)
         for (let i = 0; i < response.notes.length; i++) {
           let element = response.notes[i];
+          let index = this.notes.findIndex(a => a.id == element.id);
+
           let note = new Note(element);
-          this.notes.push(note);
+
+          if (note.patches != null) {
+            note.patches.forEach((value) => {
+              value.synced = true;
+            });
+          }
+
+          if (index === -1) {
+
+            this.notes.push(note);
+          } else {
+            this.notes[index] = note;
+          }
+
+
         }
+        this.notesBS.next(this.notes);
+        this.lastSync = new Date();
+        localStorage.setItem('lastsync', this.lastSync.toISOString());
 
       }
-      this.notesBS.next(this.notes);
-      this.lastSync = new Date();
-      localStorage.setItem('lastsync', this.lastSync.toISOString());
+      this.loading = false;
       return response;
 
 
     });
 
 
-    return httpCall;
   }
 
   //need connection
