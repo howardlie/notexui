@@ -28,11 +28,18 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NoteEditorComponent } from './note-editor/note-editor.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent, SafeHtmlPipe],
   entryComponents: [SyncStatusComponent, NoteEditorComponent, DeviceListComponent, LoginComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CKEditorModule, HttpClientModule, SocialLoginModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CKEditorModule, HttpClientModule, SocialLoginModule, ServiceWorkerModule.register('ngsw-worker.js', {
+  enabled: environment.production,
+  // Register the ServiceWorker as soon as the application is stable
+  // or after 30 seconds (whichever comes first).
+  registrationStrategy: 'registerWhenStable:30000'
+})],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, NoteService, {
     provide: 'SocialAuthServiceConfig',
     useValue: {

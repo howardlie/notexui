@@ -350,6 +350,13 @@
   dependencies:
     "tslib" "^2.3.0"
 
+"@angular/common@12.2.16":
+  "integrity" "sha512-FEqTXTEsnbDInqV1yFlm97Tz1OFqZS5t0TUkm8gzXRgpIce/F/jLwAg0u1VQkgOsno6cNm0xTWPoZgu85NI4ug=="
+  "resolved" "https://registry.npmjs.org/@angular/common/-/common-12.2.16.tgz"
+  "version" "12.2.16"
+  dependencies:
+    "tslib" "^2.2.0"
+
 "@angular/compiler-cli@^12.0.0":
   "integrity" "sha512-tlalh8SJvdCWbUPRUR5GamaP+wSc/GuCsoUZpSbcczGKgSlbaEVXUYtVXm8/wuT6Slk2sSEbRs7tXGF2i7qxVw=="
   "resolved" "https://registry.npmjs.org/@angular/compiler-cli/-/compiler-cli-12.2.16.tgz"
@@ -408,6 +415,13 @@
   dependencies:
     "tslib" "^2.3.0"
 
+"@angular/core@12.2.16":
+  "integrity" "sha512-jsmvaRdAfng99z2a9mAmkfcsCE1wm+tBYVDxnc5JquSXznwtncjzcoc2X0J0dzrkCDvzFfpTsZ9vehylytBc+A=="
+  "resolved" "https://registry.npmjs.org/@angular/core/-/core-12.2.16.tgz"
+  "version" "12.2.16"
+  dependencies:
+    "tslib" "^2.2.0"
+
 "@angular/forms@>=12.0.0", "@angular/forms@>=9.0.0", "@angular/forms@~13.0.0":
   "integrity" "sha512-Sxpc9kiCYi59GzKkpvpqgUejXq7P1dt3l1C5mnV3WBdNEpVBDRD63YLlNTya+w4uSMr+WEbtCys41QO8MXNIHQ=="
   "resolved" "https://registry.npmjs.org/@angular/forms/-/forms-13.0.3.tgz"
@@ -437,6 +451,20 @@
 "@angular/router@>=12.0.0", "@angular/router@~13.0.0":
   "integrity" "sha512-NNDrSK32mpkuQiY6CzAjRBvWSiLM+61dC3EOfBUDIyPzIp318fhqZ5ohxY42Fvp07KGnRv5tcqb/1QE8Ukwbyg=="
   "resolved" "https://registry.npmjs.org/@angular/router/-/router-13.0.3.tgz"
+  "version" "13.0.3"
+  dependencies:
+    "tslib" "^2.3.0"
+
+"@angular/service-worker@^12.0.0":
+  "integrity" "sha512-N8UcmL3zf8Kl1pxWHcB2U6zRIMNTRrDCBy4x2ROUKjA6RtxHFw51bldQ8WvU/83JrELtJj60I2RS/ecztHJQxA=="
+  "resolved" "https://registry.npmjs.org/@angular/service-worker/-/service-worker-12.2.16.tgz"
+  "version" "12.2.16"
+  dependencies:
+    "tslib" "^2.2.0"
+
+"@angular/service-worker@^13.0.0", "@angular/service-worker@~13.0.0":
+  "integrity" "sha512-vQdaHN4S9SKOxNzio/vl6NG7jzMz2VWsTF9u/mR8okzkb60xbJ3s5v1Ci+VeZFkVuWEt2l5NbZxgnXabQHl4tA=="
+  "resolved" "https://registry.npmjs.org/@angular/service-worker/-/service-worker-13.0.3.tgz"
   "version" "13.0.3"
   dependencies:
     "tslib" "^2.3.0"
@@ -9947,7 +9975,7 @@
   "resolved" "https://registry.npmjs.org/rxjs-for-await/-/rxjs-for-await-0.0.2.tgz"
   "version" "0.0.2"
 
-"rxjs@^6.0.0", "rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.5.4", "rxjs@>=6.0.0", "rxjs@>=6.6.0", "rxjs@~6.6.0", "rxjs@6.6.7":
+"rxjs@^6.0.0", "rxjs@^6.5.3 || ^7.0.0", "rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.5.4", "rxjs@>=6.0.0", "rxjs@>=6.6.0", "rxjs@~6.6.0", "rxjs@6.6.7":
   "integrity" "sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ=="
   "resolved" "https://registry.npmjs.org/rxjs/-/rxjs-6.6.7.tgz"
   "version" "6.6.7"
