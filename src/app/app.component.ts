@@ -32,13 +32,15 @@ export class AppComponent implements OnInit {
       //this.socialAuthService.signOut(); takut api authtoken jdi invalid
     });
 
-
+    
     this.deviceService.onlineStatus.subscribe(val => {
       this.isOnline = val;
     });
     this.deviceService.startRefresh();
+
+    this.subscribeToNotifications();
   }
-/*
+
   subscribeToNotifications() {
 
     this.swPush.requestSubscription({
@@ -46,7 +48,7 @@ export class AppComponent implements OnInit {
     })
     .then(sub => this.reminderService.addPushSubscriber(sub))
     .catch(err => console.error("Could not subscribe to notifications", err));
-  }*/
+  }
 
   async presentDevicesModal() {
     const modal = await this.modalController.create({
@@ -54,8 +56,6 @@ export class AppComponent implements OnInit {
     });
     return await modal.present();
   }
-
-  
 
   async presentAlertConfirmLogout() {
     const alert = await this.alertController.create({

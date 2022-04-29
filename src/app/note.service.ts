@@ -149,7 +149,9 @@ export class NoteService {
 
       payload.push(note);
     }
-    let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload});
+    let np = localStorage.getItem('notification_payload');
+    
+    let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload, "notification_payload": np});
     this.loading = true;
     httpCall.subscribe(response => {
       if (response.status == "OK") {

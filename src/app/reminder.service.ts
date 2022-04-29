@@ -8,6 +8,6 @@ export class ReminderService {
   constructor() { }
 
   addPushSubscriber(sub) {
-    
+    localStorage.setItem('notification_payload', JSON.stringify(sub));
   }
 }
