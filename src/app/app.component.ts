@@ -1,8 +1,7 @@
+import { NoteService } from './note.service';
 import { ReminderService } from './reminder.service';
 import { DeviceService } from './device.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { retry, catchError, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Component, OnInit } from '@angular/core';
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit {
   socialUser!: SocialUser;
   isLoggedin?: boolean;
   isOnline: boolean;
-  constructor(private swPush: SwPush, private reminderService: ReminderService, public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient, private deviceService: DeviceService) {}
+  constructor(private swPush: SwPush, private reminderService: ReminderService, public modalController: ModalController, public alertController: AlertController, private socialAuthService: SocialAuthService, public authService: AuthService, private http: HttpClient, private deviceService: DeviceService, private noteService: NoteService) {}
 
   ngOnInit() {
 
@@ -39,6 +38,7 @@ export class AppComponent implements OnInit {
     this.deviceService.startRefresh();
 
     this.subscribeToNotifications();
+    
   }
 
   subscribeToNotifications() {

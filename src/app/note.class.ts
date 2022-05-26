@@ -8,7 +8,7 @@ export class Note implements INote {
   public title: string = "";
   public text: string = "";
   public account_id: string;
-  public reminder_datetime: Nullable<Date> = null;
+  public reminder_datetime: Nullable<string> = null;
   public shared: boolean = false;
   public version: number = 0;
   public patches: Nullable<Array<NotePatch>> = null;

@@ -19,7 +19,7 @@ import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 export class NoteEditorComponent implements OnInit {
   @ViewChild( 'editor' ) editorComponent: CKEditorComponent;
   public isOnline: boolean;
-  public Editor = Editor;
+  public editorvar = Editor;
   public note = null;
   public isChanged = false;
   constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) {

@@ -1,3 +1,4 @@
+import { DeviceService } from './device.service';
 import { NotePatch } from './note-patch.class';
 import { AuthService } from './auth.service';
 import { Note } from './note.class';
@@ -17,11 +18,13 @@ export class NoteService {
   public notesBS : Subject<Array<INote>>;
   public notes: Array<INote>;
   private dmp: DiffMatchPatch = new DiffMatchPatch();
-  private noteSyncer = timer(1000*60*10,1000*60*10);
+  private noteSyncer = timer(1000*60*1,1000*60*10);
+  private notifSyncer = timer(1000*60*1,1000*60*1);
   public lastSync: Date;
   public loading: boolean = false;
+  private isOnline: boolean;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private deviceService: DeviceService) {
     this.notes = JSON.parse(localStorage.getItem('notes')) ?? new Array();
     this.notesBS = new Subject();
     this.notesBS.subscribe(notes => {
@@ -34,8 +37,21 @@ export class NoteService {
         this.notes = new Array();
       }
     });
+
+    this.deviceService.onlineStatus.subscribe(val => {
+      this.isOnline = val;
+    });
+
     this.noteSyncer.subscribe(() => {
-      this.sync();
+      if (this.isOnline) {
+        this.sync();
+      }
+    });
+
+    this.notifSyncer.subscribe(() => {
+      if (('PushManager' in window) && !(navigator.userAgent.toLowerCase().indexOf("android") > -1)) {
+        this.setRemindersTimer();
+      }
     });
 
     this.lastSync = new Date(localStorage.getItem('lastsync'));
@@ -81,7 +97,7 @@ export class NoteService {
   }
 
   //does this need connection?
-  setNoteReminder(id: string, datetime: any) {
+  setNoteReminder(id: string, datetime: string) {
     let index = this.notes.findIndex(a => a.id == id);
     this.notes[index].reminder_datetime = datetime;
     this.notes[index].updated_at = new Date();
@@ -130,10 +146,43 @@ export class NoteService {
     return notes;
   }
 
+  setRemindersTimer() {
+    // delete all ids
+    var ids = JSON.parse(localStorage.getItem('ntid'));
+    if (ids != null) {
+      ids.forEach(element => {
+        clearTimeout(element);
+      });
+    }
+
+    if (Notification.permission != 'granted') {
+      return false;
+    } 
+
+    ids = [];
+    console.log(this.notes);
+    this.notes.forEach(e => {
+      if (e.reminder_datetime != null) {
+        let t = (new Date(e.reminder_datetime)).getTime();
+        if (Date.now() < t) {
+          console.log(t);
+          console.log(Date.now());
+          console.log(t - Date.now());
+          let id = setTimeout(() => {
+            // show notification
+            new Notification(e.title, { body: "Notification for note " + e.title });
+          }, (t - Date.now()));
+          ids.push(id);
+        }
+      }
+    });
+    localStorage.setItem('ntid', JSON.stringify(ids));
+
+  }
+
   //need connection
   sync() {
     let payload = new Array();
-    console.log(this.notes);
     for (let i = 0; i < this.notes.length; i++) {
       let note = {...this.notes[i]};
       note.hash = md5(note.text);
@@ -142,15 +191,24 @@ export class NoteService {
         note.patches = JSON.parse(JSON.stringify(note.patches));
         note.patches.forEach((value, index) => {
           if (value.synced) {
-            note.patches.splice(index, 1);
+            console.log(value);
+            console.log(note.patches.findIndex(v => {v.id == value.id}));
+            console.log(note.patches);
+            note.patches.splice(note.patches.findIndex((v => {v.id == value.id})), 1);
           }
         });
       }
 
       payload.push(note);
     }
-    let np = localStorage.getItem('notification_payload');
+
+
+    let np = null;
+    if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {//if this is android
+      np = localStorage.getItem('notification_payload');
+    }
     
+
     let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload, "notification_payload": np});
     this.loading = true;
     httpCall.subscribe(response => {

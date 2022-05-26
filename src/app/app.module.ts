@@ -30,9 +30,10 @@ import { NoteEditorComponent } from './note-editor/note-editor.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { PatchSyncedPipe } from './patch-synced.pipe';
 
 @NgModule({
-  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent, SafeHtmlPipe],
+  declarations: [AppComponent, SyncStatusComponent, MyNotesListComponent, SharedNotesListComponent, NoteEditorComponent, DeviceListComponent, LoginComponent, DatetimeModalComponent, ArchivedNotesListComponent, DeletedNotesListComponent, SafeHtmlPipe, PatchSyncedPipe],
   entryComponents: [SyncStatusComponent, NoteEditorComponent, DeviceListComponent, LoginComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CKEditorModule, HttpClientModule, SocialLoginModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' })],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, NoteService, {

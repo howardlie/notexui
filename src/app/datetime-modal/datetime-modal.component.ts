@@ -17,18 +17,19 @@ export class DatetimeModalComponent implements OnInit {
   minDate: any = new Date().toISOString();
 
   constructor(public modalController: ModalController, private noteService: NoteService) {
-
+    //this.selectedDate = this.note.reminder_datetime;
   }
 
   ngOnInit() {
 
   }
 
-  confirm() {
 
-    this.noteService.setNoteReminder(this.note.id, this.datetime.value);
-    this.datetime.confirm();
+  async confirm() {
+    await this.datetime.confirm();
     this.dismiss();
+    this.noteService.setNoteReminder(this.note.id, this.datetime.value);
+    
   }
 
   removeReminder() {

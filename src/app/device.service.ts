@@ -19,6 +19,7 @@ export class DeviceService {
 
   startRefresh() {
     this.connectionChecker.subscribe(() => {
+      
       this.http.get(this.authService.baseUrl + '/api/ping').subscribe(response => {
         this.onlineStatus.next((response['status'] == "OK"));
 

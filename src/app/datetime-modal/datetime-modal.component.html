@@ -5,7 +5,7 @@
 
   </ion-buttons>
 </ion-toolbar>
-  <ion-datetime style="margin: auto;" size="cover" value="{{ note.reminder_datetime }}" min="{{minDate}}">
+  <ion-datetime style="margin: auto;" size="cover" [value]="note.reminder_datetime" min="{{minDate}}">
     <ion-buttons slot="buttons">
       <ion-button fill="solid" (click)="confirm()">Confirm</ion-button>
       <ion-button *ngIf="note.reminder_datetime != null" fill="solid" (click)="removeReminder()">Remove Reminder</ion-button>
