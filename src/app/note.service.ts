@@ -157,7 +157,7 @@ export class NoteService {
 
     if (Notification.permission != 'granted') {
       return false;
-    } 
+    }
 
     ids = [];
     console.log(this.notes);
@@ -189,13 +189,15 @@ export class NoteService {
       note.text = "";
       if (note.patches != null) {
         note.patches = JSON.parse(JSON.stringify(note.patches));
+        let deletedids = [];
         note.patches.forEach((value, index) => {
           if (value.synced) {
-            console.log(value);
-            console.log(note.patches.findIndex(v => {v.id == value.id}));
-            console.log(note.patches);
-            note.patches.splice(note.patches.findIndex((v => {v.id == value.id})), 1);
+            deletedids.push(value.id);
+            //note.patches.splice(note.patches.findIndex((v => {v.id == value.id})), 1);
           }
+        });
+        deletedids.forEach((value) => {
+          note.patches.splice(note.patches.findIndex((v => v.id == value)), 1);
         });
       }
 
@@ -207,7 +209,7 @@ export class NoteService {
     if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {//if this is android
       np = localStorage.getItem('notification_payload');
     }
-    
+
 
     let httpCall = this.http.post<any>(this.authService.baseUrl + '/api/notes/sync', {"notes": payload, "notification_payload": np});
     this.loading = true;
@@ -295,15 +297,15 @@ export class NoteService {
       if (index === -1) {
 
         let response = await this.http.get<any>(this.authService.baseUrl + '/api/notes/getShared/' + id).toPromise();
-        
-        
+
+
         if (response.status == "OK") {
           note = new Note(response.note);
           this.notes.unshift(note);
           this.notesBS.next(this.notes);
         }
-  
-        
+
+
       } else {
         note = this.notes[index];
       }
