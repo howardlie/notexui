@@ -6,10 +6,10 @@ import { DeviceService } from './../device.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
-import * as Editor from '../ckeditor5/build/ckeditor';
+import * as Editor from '../../ckeditor5/build/ckeditor';
 import { NoteService } from '../note.service';
-import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-//import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor5, CKEditorComponent, CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-note-editor',
@@ -19,7 +19,7 @@ import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 export class NoteEditorComponent implements OnInit {
   @ViewChild( 'editor' ) editorComponent: CKEditorComponent;
   public isOnline: boolean;
-  public editorvar = Editor;
+  public editorvar : ClassicEditor = Editor;
   public note = null;
   public isChanged = false;
   public patchDataModal = "";
