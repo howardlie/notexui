@@ -244,6 +244,8 @@ export class NoteService {
           this.notes[index].title = 'Conflicting note '+ this.notes[index].title;
           let notepatch = new NotePatch(null, this.notes[index].id);
           let version = 1;
+          notepatch.editor_email = this.authService.currentUser.email;
+          notepatch.editor_name = this.authService.currentUser.name;
           notepatch.version = version;
           this.notes[index].patches = null;
           notepatch.patch = this.dmp.patch_toText(this.dmp.patch_make('', this.notes[index].text));

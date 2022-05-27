@@ -22,6 +22,7 @@ export class NoteEditorComponent implements OnInit {
   public editorvar = Editor;
   public note = null;
   public isChanged = false;
+  public patchDataModal = "";
   constructor(private router: Router, private deviceService: DeviceService, private route: ActivatedRoute, public noteService: NoteService, private actionSheetCtrl: ActionSheetController, private alertController: AlertController, public authService: AuthService, private modalController: ModalController) {
     
     let id = this.route.snapshot.params['id'];
@@ -82,6 +83,25 @@ export class NoteEditorComponent implements OnInit {
     
 
     //console.log(this.note);
+  }
+
+  async showPatchDataAlert(data) {
+    const alert = await this.alertController.create({
+      header: 'Patch Data',
+      message: data,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            //this.router.navigate(['/']);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   async presentAlertNotFound() {

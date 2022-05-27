@@ -10,7 +10,7 @@ import { take, takeUntil } from 'rxjs/operators';
   //{providedIn: 'root'}
 )
 export class AuthService {
-    public baseUrl = "http://localhost:8000";
+    public baseUrl = "https://note-server.forthe.top";
     private loggedUserSubject: BehaviorSubject<any>;
     public loggedInUser: Observable<any>;
     public isLoggedin: boolean;

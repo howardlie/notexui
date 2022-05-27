@@ -90,7 +90,7 @@
         <ion-list>
 
         <ion-item *ngFor="let patch of note.patches;">
-          <ion-label><ion-icon *ngIf="patch.synced" slot="start" name="checkmark-sharp"></ion-icon><ion-icon *ngIf="!patch.synced" slot="start" name="refresh"></ion-icon> Edited at {{ patch.datetime.getHours() }}:{{ patch.datetime.getMinutes() }} {{ patch.datetime.getDate() }}/{{ patch.datetime.getMonth() }}/{{ patch.datetime.getFullYear() }} by {{ patch.editor_name }} ({{ patch.editor_email }})</ion-label>
+          <ion-label><ion-icon *ngIf="patch.synced" slot="start" name="checkmark-sharp"></ion-icon><ion-icon *ngIf="!patch.synced" slot="start" name="refresh"></ion-icon> Edited at {{ patch.datetime.getHours() }}:{{ patch.datetime.getMinutes() }} {{ patch.datetime.getDate() }}/{{ patch.datetime.getMonth() }}/{{ patch.datetime.getFullYear() }} by {{ patch.editor_name }} ({{ patch.editor_email }}) <span  id="patchdata" (click)="showPatchDataAlert(patch.patch)"><ion-icon name="information-circle-outline"></ion-icon></span></ion-label>
         </ion-item>
       </ion-list></ion-content>
 
